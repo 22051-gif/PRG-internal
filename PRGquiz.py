@@ -79,10 +79,15 @@ def main_loop():
     answers=[],[],[],[],[],[],[],[],[],[]
     quest_count=0
 
-    if quest_count<quiz_len:
-        what_question()
+    while quest_count<quiz_len:
+        if quest_count<quiz_len:
+            what_question()
 
-        question_screen()
+            question_screen()
+
+    calc_score()
+
+    end_screen()
 
 def what_question():
     global question_num
@@ -150,6 +155,60 @@ def action_next():
 def action_previous():
     quest_count=quest_count-1
     returnn=1
+
+def calc_score():
+    global score
+    global correct
+    global incorrect
+
+    #correct=how manny times "correct" appears in answers
+    correct=1
+
+    #incorrect=how many times "incorrect" appears in answers
+    incorrect=1
+
+    score=(correct/(correct+incorrect))*100
+
+    if score>=80:
+        grade="excellence"
+    elif (score>=55) and (score<80):
+        grade="excellence"
+    elif (score>=30) and (score<55):
+        grade="achieved"
+    elif score<30:
+        grade="not achieved"
+
+def end_screen():
+    frame_end=tk.Frame(root, height=600, width=600)
+    frame_end.pack()
+
+    if score=="excellence":
+        label_congrats=tk.Label(frame_end, text="Congratulations!")
+        label_congrats.pack()
+
+        message="You answered", correct, "out of ", (correct+incorrect), "questions correctly"
+
+        label_score=tk.Label(frame_end, text=message)
+        label_score.pack()
+
+        label_grade=tk.Label(frame_end, text="You have achieved excellence!")
+        label_grade.pack()
+
+        if retry!="yes":
+            button_retry=tk.Button(frame_end, text="Retry", command=action_retry)
+            button_retry.pack()
+
+        button_end=tk.Button(frame_end, text="end", command=action_end)
+
+def action_retry():
+    global retry
+    retry="yes"
+
+    main_loop()
+
+def action_end():
+    #close program
+    print("close program")
 
 intro_screen()
 
