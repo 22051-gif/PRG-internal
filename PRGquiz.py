@@ -183,7 +183,7 @@ def question_screen():
     elif questions[1][(question_num-1)]=="true/false":
 
         #prints a, b, c, d radiobuttons
-        rad_grp_var = tk.IntVar()
+        rad_grp_var = tk.StringVar()
         radiobutton_a = tk.Radiobutton(frame_question, text=options[(question_num-1)][0], variable=rad_grp_var, value="a")
         radiobutton_b = tk.Radiobutton(frame_question, text=options[(question_num-1)][1], variable=rad_grp_var, value="b")
         radiobutton_c = tk.Radiobutton(frame_question, text=options[(question_num-1)][2], variable=rad_grp_var, value="c")
@@ -207,7 +207,7 @@ def action_next():
         answers[quest_count]="correct"
     
     #if the answer is incorrect
-    else:
+    elif answer==questions[2][(question_num-1)]:
 
         #It logs in the answers list variable corresponding to that question that the answer was incorrect
         answers[quest_count]="incorrect"
@@ -237,10 +237,10 @@ def calc_score():
     global grade
 
     #correct=how manny times "correct" appears in answers
-    correct=1
+    correct=answers.count("correct")
 
     #incorrect=how many times "incorrect" appears in answers
-    incorrect=1
+    incorrect=answers.count("incorrect")
 
     #calculates the score percentage
     score=(correct/(correct+incorrect))*100
@@ -319,7 +319,7 @@ def action_retry():
 def action_end():
 
     #close program
-    print("close program")
+    exit()
 
 #calls the intro_screen function
 intro_screen()
