@@ -65,22 +65,31 @@ root = tk.Tk()
 root.title("DVC Quiz")
 
 #GUI size and shape
-root.geometry("600x600+10+10")
+root.geometry("600x530+10+10")
 
 #intro_screen function to create the intro screen
 def intro_screen():
 
     #creates the frame_intro frame for the intro screen
-    frame_intro=tk.Frame(root, width="600", height="600")
-    frame_intro.pack()
+    frame_intro=tk.Frame(root, width="600", height="600", bg="light green")
+    frame_intro.place(x=0, y=0)
 
-    #creates the label for introducing the user to the program
-    label_intro=tk.Label(frame_intro, width="600", text="Welcome to the 9DVC quiz!")
-    label_intro.place(x=100, y=100)
+    #creates the labels for introducing the user to the program
+    label_intro=tk.Label(frame_intro, width=36, height=2, text="Welcome to the 9DVC quiz!", font="arial 20")
+    label_intro.place(x=10, y=10)
+
+    label_explain=tk.Label(frame_intro, text="You will be given 10 9DVC related", font="arial 15", bg="light green")
+    label_explain.place(x=140, y=120)
+
+    label_explain2=tk.Label(frame_intro, text="multi-choice and true/false questions", font="arial 15", bg="light green")
+    label_explain2.place(x=135, y=150)
+
+    label_explain3=tk.Label(frame_intro, text="Have fun!", font="arial 17", bg="light green")
+    label_explain3.place(x=250, y=230)
 
     #creates the button for starting the program that sends you to the action_start function
-    button_start=tk.Button(frame_intro, command=action_start)
-    button_start.place(x=100, y=150)
+    button_start=tk.Button(frame_intro, text="Start", font="arial 15", width=12, command=action_start)
+    button_start.place(x=430, y=400)
 
 #action_start function that is called with the start button
 def action_start():
