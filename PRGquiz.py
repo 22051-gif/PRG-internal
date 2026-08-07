@@ -58,6 +58,8 @@ options=[
 used_questions=[]
 quiz_len=10
 returnn=0
+retry="no"
+quest_count=0
 
 #creates GUI
 root = tk.Tk()
@@ -103,7 +105,7 @@ def action_start():
     global answers
 
     #initialises variables
-    answers=[],[],[],[],[],[],[],[],[],[]
+    answers=[""], [""], [""], [""], [""], [""], [""], [""], [""], [""]
     quest_count=0
 
     #calls the main_loop function
@@ -120,14 +122,13 @@ def main_loop():
 
         #calls the question_screen function
         question_screen()
+    else:
 
-        input()
+        #calls the calc_score function
+        calc_score()
 
-    #calls the calc_score function
-    calc_score()
-
-    #calls the end_screen function
-    end_screen()
+        #calls the end_screen function
+        end_screen()
 
 #the what_question function that decides what question to show the user and makes sure that it hasn't been used before
 def what_question():
@@ -139,7 +140,7 @@ def what_question():
     if returnn==1:
         
         #defines question_num (the question we are on) as the last question that was used
-        question_num=used_questions(quest_count)
+        question_num=used_questions[quest_count]
     
     #if the user has chosen to move on to the next question
     else:
@@ -175,7 +176,7 @@ def question_screen():
     label_questnum.place(x=10, y=10)
 
     #label_question to display the question
-    label_question=tk.Label(frame_question, text=questions[0][question_num-1], font="arial 14")
+    label_question=tk.Label(frame_question, text=questions[0][question_num-1], font="arial 13")
     label_question.place(x=10, y=50)
 
     #gets the image for the previous button
@@ -227,6 +228,8 @@ def question_screen():
 def action_next():
     global returnn
 
+    print("buttonpressed")
+
     #finds the answer from the last question
     answer=rad_grp_var.get()
 
@@ -235,9 +238,9 @@ def action_next():
 
         #It logs in the answers list variable corresponding to that question that the answer was correct
         answers[quest_count]="correct"
-    
+
     #if the answer is incorrect
-    elif answer!=questions[2][(question_num-1)]:
+    elif (answer!=questions[2][(question_num-1)]) and (answer!=""):
 
         #It logs in the answers list variable corresponding to that question that the answer was incorrect
         answers[quest_count]="incorrect"
