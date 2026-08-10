@@ -1,7 +1,6 @@
 #imports
 import tkinter as tk
 import random
-from PIL import Image, ImageTk
 
 #Questions list including the question, question type and correct answer
 questions=[[
@@ -60,6 +59,10 @@ quiz_len=10
 returnn=0
 retry="no"
 quest_count=0
+
+frame_intro = None 
+frame_question = None 
+frame_end = None 
 
 #creates GUI
 root = tk.Tk()
@@ -179,25 +182,15 @@ def question_screen():
     label_question=tk.Label(frame_question, text=questions[0][question_num-1], font="arial 13")
     label_question.place(x=10, y=50)
 
-    #gets the image for the previous button
-    image = Image.open("previousarrow.png")
-    image=image.resize((100, 100), Image.LANCZOS)
-    previous=ImageTk.PhotoImage(image)
-
     #if the question is not question 1
     if quest_count!=0:
 
         #prints the previous button
-        button_previous=tk.Button(frame_question, image=previous, width=12, command=action_previous)
+        button_previous=tk.Button(frame_question, text="Previous", width=12, command=action_previous)
         button_previous.place(x=100, y=400)
 
-    #gets the image for the next button
-    image2 = Image.open("nextarrow.png")
-    image2=image2.resize((100, 100), Image.LANCZOS)
-    next=ImageTk.PhotoImage(image2)
-
     #prints the next button
-    button_next=tk.Button(frame_question, image=next, command=action_next)
+    button_next=tk.Button(frame_question, text="Previous", command=action_next)
     button_next.place(x=430, y=400)
 
     #if the question is true or false
