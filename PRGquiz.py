@@ -108,7 +108,7 @@ def action_start():
     global answers
 
     #initialises variables
-    answers=[""], [""], [""], [""], [""], [""], [""], [""], [""], [""]
+    answers=[""] * quiz_len
     quest_count=0
 
     #calls the main_loop function
@@ -116,9 +116,17 @@ def action_start():
 
 #main_loop function that contains most of the main code
 def main_loop():
+    global quest_count
 
     #while loop to loop 10 times for 10 different questions
     if quest_count<quiz_len:
+
+        if quest_count==0:
+            frame_intro.pack_forget()
+        elif retry=="yes":
+            frame_end.pack_forget()
+        else:
+            frame_question.pack_forget()
 
         #calls the what_question function
         what_question()
@@ -137,7 +145,7 @@ def main_loop():
 def what_question():
 
     #globalises the question_num variable
-    global question_num
+    global question_num, quest_count
 
     #If the user has chosen to return to a past question they are sent to the last question they answered
     if returnn==1:
@@ -161,10 +169,8 @@ def what_question():
 #the question_screen function that prints the question screen
 def question_screen():
     #globalises the rad_grp_var variable
-    global rad_grp_var
+    global rad_grp_var, quest_count
     global frame_question
-
-    frame_intro.pack_forget()
 
     #creates the frame frame_question for the question screen
     frame_question=tk.Frame(root, height=600, width=600, bg="light steel blue")
@@ -179,18 +185,18 @@ def question_screen():
     label_questnum.place(x=10, y=10)
 
     #label_question to display the question
-    label_question=tk.Label(frame_question, text=questions[0][question_num-1], font="arial 13")
+    label_question=tk.Label(frame_question, text=questions[0][question_num-1], font="arial 12")
     label_question.place(x=10, y=50)
 
     #if the question is not question 1
     if quest_count!=0:
 
         #prints the previous button
-        button_previous=tk.Button(frame_question, text="Previous", width=12, command=action_previous)
-        button_previous.place(x=100, y=400)
+        button_previous=tk.Button(frame_question, text="Previous", width=12, font="arial 15", command=action_previous)
+        button_previous.place(x=45, y=400)
 
     #prints the next button
-    button_next=tk.Button(frame_question, text="Previous", command=action_next)
+    button_next=tk.Button(frame_question, text="Next", width=12, font="arial 15", command=action_next)
     button_next.place(x=430, y=400)
 
     #if the question is true or false
@@ -219,9 +225,7 @@ def question_screen():
 
 #the action_next function to move onto the next question
 def action_next():
-    global returnn
-
-    print("buttonpressed")
+    global returnn, quest_count
 
     #finds the answer from the last question
     answer=rad_grp_var.get()
@@ -250,7 +254,7 @@ def action_next():
 def action_previous():
 
     #globalises the returnn variable
-    global returnn
+    global returnn, quest_count
 
     #takes away one from the quest_count variable to return to the last question
     quest_count=quest_count-1
@@ -274,8 +278,12 @@ def calc_score():
     #incorrect=how many times "incorrect" appears in answers
     incorrect=answers.count("incorrect")
 
-    #calculates the score percentage
-    score=(correct/(correct+incorrect))*100
+    if correct+incorrect==0:
+        score=0
+    else:
+            
+        #calculates the score percentage
+        score=(correct/(correct+incorrect))*100
 
     #if the user got over 80% correct
     if score>=80:
@@ -308,62 +316,62 @@ def end_screen():
     frame_question.pack_forget()
 
     #creates the frame frame_end
-    frame_end=tk.Frame(root, bg="light slate blue", height=600, width=600)
-    frame_end.place(x=0,y=0)
+    frame_end=tk.Frame(root, bg="light steel blue", height="600", width="600")
+    frame_end.pack(fill="both")
 
     #the message telling them how many questions they got right
     message="You answered", correct, "out of ", (correct+incorrect), "questions correctly"
 
-    label_score=tk.Label(frame_end, bg="light slate blue", text=message, font="arial 15")
+    label_score=tk.Label(frame_end, bg="light steel blue", text=message, font="arial 15")
     label_score.place(x=150, y=120)
 
     #if the user achieved excellence
-    if score=="excellence":
+    if grade=="excellence":
 
         #prints a congratulations message
-        label_congrats=tk.Label(frame_end, bg="light slate blue", text="Congratulations!", font="arial 20")
+        label_congrats=tk.Label(frame_end, bg="light steel blue", text="Congratulations!", font="arial 20")
         label_congrats.place(x=10, y=10)
 
         #tells them their score
-        label_grade=tk.Label(frame_end, bg="light slate blue", text="You have achieved excellence!", font="arial 17")
+        label_grade=tk.Label(frame_end, bg="light steel blue", text="You have achieved excellence!", font="arial 17")
         label_grade.place(x=250, y=230)
     else:
 
         #prints a motivational message
-        label_congrats=tk.Label(frame_end, bg="light slate blue", text="Good try!", font="arial 20")
+        label_congrats=tk.Label(frame_end, bg="light steel blue", text="Good try!", font="arial 20")
         label_congrats.place(x=10, y=10)
 
         #if the user got a not achieved
-        if score=="not achieved":
+        if grade=="not achieved":
             #tells them their score
-            label_grade=tk.Label(frame_end, bg="light slate blue", text="This is a not achieved", font="arial 17")
+            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is a not achieved", font="arial 17")
             label_grade.place(x=250, y=230)
 
         #if the user got an achieved
-        elif score=="achieved":
+        elif grade=="achieved":
             #tells them their score
-            label_grade=tk.Label(frame_end, bg="light slate blue", text="This is an achieved", font="arial 17")
+            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is an achieved", font="arial 17")
             label_grade.place(x=250, y=230)
 
         #if the user got a merit
-        elif score=="merit":
+        elif grade=="merit":
             #tells them their score
-            label_grade=tk.Label(frame_end, bg="light slate blue", text="This is a merit", font="arial 17")
+            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is a merit", font="arial 17")
             label_grade.place(x=250, y=230)
         
         #prints a motivational message
-        label_retry=tk.Label(frame_end, bg="light slate blue", text="Retry?", font="arial 15")
+        label_retry=tk.Label(frame_end, bg="light steel blue", text="Retry?", font="arial 15")
         label_retry.place(x=250, y=260)
 
     #if this is not their second attempt
     if retry!="yes":
 
         #prints the retry button
-        button_retry=tk.Button(frame_end, bg="light slate blue", text="Retry", command=action_retry)
+        button_retry=tk.Button(frame_end, text="Retry", command=action_retry)
         button_retry.pack()
 
     #prints the end button
-    button_end=tk.Button(frame_end, bg="light slate blue", text="end", command=action_end)
+    button_end=tk.Button(frame_end, text="end", command=action_end)
     button_end.pack()
 
 #the action_retry function that lets the user retry the quiz with different questions
