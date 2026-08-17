@@ -10,7 +10,7 @@ questions=[[
     "In Blender, to render means to edit a project",
     "What angle are the horizontal lines in Isometric drawing?",
     "In Blender, the scale tool can adjust the size of an object",
-    "Which axes determines the horizontal location of an object",
+    "Which axes determine the horizontal location of an object",
     "To draw in oblique you typically first draw the 2d shape",
     "What is a donut shape called in Blender",
     "What does DVC stand for?",
@@ -34,7 +34,7 @@ questions=[[
 options=[
     ["Game making", "3D modeling", "Drawing", "Designing"],
     ["Shift+a", "Ctrl+1", "Right click, create sphere", "Shift+o"],
-    ["Taking a photo", "Moving around objects", "Viewing the project", "Modifing a delected object"],
+    ["Taking a photo", "Moving around objects", "Viewing the project", "Modifing a selected object"],
     ["True", "False"],
     ["30 degrees", "45 degrees", "50 degrees", "90 degrees"],
     ["True", "False"],
@@ -71,7 +71,7 @@ root = tk.Tk()
 root.title("DVC Quiz")
 
 #GUI size and shape
-root.geometry("600x530+10+10")
+root.geometry("600x530+600+200")
 
 #intro_screen function to create the intro screen
 def intro_screen():
@@ -121,15 +121,15 @@ def main_loop():
     #while loop to loop 10 times for 10 different questions
     if quest_count<quiz_len:
 
-        if quest_count==0:
+        #calls the what_question function
+        what_question()
+
+        if retry=="no" and quest_count==0:
             frame_intro.pack_forget()
-        elif retry=="yes":
+        elif retry=="yes" and quest_count==0:
             frame_end.pack_forget()
         else:
             frame_question.pack_forget()
-
-        #calls the what_question function
-        what_question()
 
         #calls the question_screen function
         question_screen()
@@ -157,11 +157,11 @@ def what_question():
     else:
 
         #Generates a random number between 0-18 for the question number
-        question_num=random.randint(0,18)
+        question_num=random.randint(0,19)
 
         #if the question has already been used then it generates another
-        for question_num in used_questions:
-            question_num=random.randint(0,18)
+        while question_num in used_questions:
+            question_num=random.randint(0,19)
 
         #Adds the question number onto the used_questions list so it cannot be used again
         used_questions.append(question_num)
@@ -185,7 +185,7 @@ def question_screen():
     label_questnum.place(x=10, y=10)
 
     #label_question to display the question
-    label_question=tk.Label(frame_question, text=questions[0][question_num-1], font="arial 12")
+    label_question=tk.Label(frame_question, text=questions[0][question_num], font="arial 12")
     label_question.place(x=10, y=50)
 
     #if the question is not question 1
@@ -193,14 +193,14 @@ def question_screen():
 
         #prints the previous button
         button_previous=tk.Button(frame_question, text="Previous", width=12, font="arial 15", command=action_previous)
-        button_previous.place(x=45, y=400)
+        button_previous.place(x=30, y=400)
 
     #prints the next button
     button_next=tk.Button(frame_question, text="Next", width=12, font="arial 15", command=action_next)
     button_next.place(x=430, y=400)
 
     #if the question is true or false
-    if questions[1][(question_num-1)]=="true/false":
+    if questions[1][question_num]=="true/false":
         
         #prints the true and false radiobuttons
         rad_grp_var = tk.StringVar()
@@ -210,14 +210,14 @@ def question_screen():
         radiobutton_false.place(x=30, y=150)
     
     #if the question is multi-choice
-    elif questions[1][(question_num-1)]!="true/false":
+    elif questions[1][question_num]!="true/false":
 
         #prints a, b, c, d radiobuttons
         rad_grp_var = tk.StringVar()
-        radiobutton_a = tk.Radiobutton(frame_question, text=options[(question_num-1)][0], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="a")
-        radiobutton_b = tk.Radiobutton(frame_question, text=options[(question_num-1)][1], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="b")
-        radiobutton_c = tk.Radiobutton(frame_question, text=options[(question_num-1)][2], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="c")
-        radiobutton_d = tk.Radiobutton(frame_question, text=options[(question_num-1)][3], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="d")
+        radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="a")
+        radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="b")
+        radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="c")
+        radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="d")
         radiobutton_a.place(x=30, y=100)
         radiobutton_b.place(x=30, y=170)
         radiobutton_c.place(x=30, y=240)
@@ -231,13 +231,13 @@ def action_next():
     answer=rad_grp_var.get()
 
     #if the answer is correct
-    if answer==questions[2][(question_num-1)]:
+    if answer==questions[2][question_num]:
 
         #It logs in the answers list variable corresponding to that question that the answer was correct
         answers[quest_count]="correct"
 
     #if the answer is incorrect
-    elif (answer!=questions[2][(question_num-1)]) and (answer!=""):
+    elif (answer!=questions[2][question_num]) and (answer!=""):
 
         #It logs in the answers list variable corresponding to that question that the answer was incorrect
         answers[quest_count]="incorrect"
@@ -251,6 +251,7 @@ def action_next():
     #calls the main_loop function
     main_loop()
 
+#the action_previous function to return to the last question
 def action_previous():
 
     #globalises the returnn variable
@@ -265,6 +266,7 @@ def action_previous():
     #calls the main_loop function
     main_loop()
 
+#the calc_score function to calculate the user's score and grade
 def calc_score():
     #globalises the variables
     global score
@@ -311,6 +313,7 @@ def calc_score():
 
 #the end_screen function that shows the final screen
 def end_screen():
+    global frame_end
 
     #hides the question screen
     frame_question.pack_forget()
@@ -320,59 +323,59 @@ def end_screen():
     frame_end.pack(fill="both")
 
     #the message telling them how many questions they got right
-    message="You answered", correct, "out of ", (correct+incorrect), "questions correctly"
+    message=f"You answered {correct} out of {correct+incorrect} questions correctly"
 
     label_score=tk.Label(frame_end, bg="light steel blue", text=message, font="arial 15")
-    label_score.place(x=150, y=120)
+    label_score.place(x=80, y=120)
 
     #if the user achieved excellence
     if grade=="excellence":
 
         #prints a congratulations message
-        label_congrats=tk.Label(frame_end, bg="light steel blue", text="Congratulations!", font="arial 20")
+        label_congrats=tk.Label(frame_end, text="Congratulations!", width=36, height=2, font="arial 20")
         label_congrats.place(x=10, y=10)
 
         #tells them their score
         label_grade=tk.Label(frame_end, bg="light steel blue", text="You have achieved excellence!", font="arial 17")
-        label_grade.place(x=250, y=230)
+        label_grade.place(x=150, y=230)
     else:
 
         #prints a motivational message
-        label_congrats=tk.Label(frame_end, bg="light steel blue", text="Good try!", font="arial 20")
+        label_congrats=tk.Label(frame_end, text="Good try!", width=36, height=2, font="arial 20")
         label_congrats.place(x=10, y=10)
 
         #if the user got a not achieved
         if grade=="not achieved":
             #tells them their score
             label_grade=tk.Label(frame_end, bg="light steel blue", text="This is a not achieved", font="arial 17")
-            label_grade.place(x=250, y=230)
+            label_grade.place(x=190, y=230)
 
         #if the user got an achieved
         elif grade=="achieved":
             #tells them their score
             label_grade=tk.Label(frame_end, bg="light steel blue", text="This is an achieved", font="arial 17")
-            label_grade.place(x=250, y=230)
+            label_grade.place(x=200, y=230)
 
         #if the user got a merit
         elif grade=="merit":
             #tells them their score
             label_grade=tk.Label(frame_end, bg="light steel blue", text="This is a merit", font="arial 17")
-            label_grade.place(x=250, y=230)
+            label_grade.place(x=210, y=230)
         
         #prints a motivational message
         label_retry=tk.Label(frame_end, bg="light steel blue", text="Retry?", font="arial 15")
-        label_retry.place(x=250, y=260)
+        label_retry.place(x=260, y=260)
 
     #if this is not their second attempt
     if retry!="yes":
 
         #prints the retry button
-        button_retry=tk.Button(frame_end, text="Retry", command=action_retry)
-        button_retry.pack()
+        button_retry=tk.Button(frame_end, text="Retry", width=12, font="arial 15", command=action_retry)
+        button_retry.place(x=30, y=400)
 
     #prints the end button
-    button_end=tk.Button(frame_end, text="end", command=action_end)
-    button_end.pack()
+    button_end=tk.Button(frame_end, text="End", width=12, font="arial 15", command=action_end)
+    button_end.place(x=430, y=400)
 
 #the action_retry function that lets the user retry the quiz with different questions
 def action_retry():
@@ -382,8 +385,8 @@ def action_retry():
     #tells the program that the user is retrying the quiz so they cannot do it another time
     retry="yes"
 
-    #calls the main_loop function
-    main_loop()
+    #calls the action_start function
+    action_start()
 
 #the action_end function that closes the program
 def action_end():
