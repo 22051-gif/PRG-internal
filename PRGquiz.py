@@ -54,15 +54,10 @@ options=[
     ["True", "False"]]
 
 #initialises variables and constants
-used_questions=[]
 quiz_len=10
-returnn=0
+used_questions=[""]*(quiz_len*2)
 retry="no"
 quest_count=0
-
-frame_intro = None 
-frame_question = None 
-frame_end = None 
 
 #creates GUI
 root = tk.Tk()
@@ -93,8 +88,14 @@ def intro_screen():
     label_explain2=tk.Label(frame_intro, text="multi-choice and true/false questions", font="arial 15", bg="light steel blue")
     label_explain2.place(x=135, y=150)
 
+    label_explain3=tk.Label(frame_intro, text="You may choose not to attempt a question by skipping it", font="arial 15", bg="light steel blue")
+    label_explain3.place(x=60, y=180)
+
+    label_explain4=tk.Label(frame_intro, text="(this will not be included into your score)", font="arial 15", bg="light steel blue")
+    label_explain4.place(x=120, y=210)
+
     label_explain3=tk.Label(frame_intro, text="Have fun!", font="arial 17", bg="light steel blue")
-    label_explain3.place(x=250, y=230)
+    label_explain3.place(x=250, y=280)
 
     #creates the button for starting the program that sends you to the action_start function
     button_start=tk.Button(frame_intro, text="Start", font="arial 15", width=12, command=action_start)
@@ -148,7 +149,8 @@ def what_question():
     global question_num, quest_count
 
     #If the user has chosen to return to a past question they are sent to the last question they answered
-    if returnn==1:
+    #or if they are returning back to the next question after clicking previous then they are taken back to the same question
+    if used_questions[quest_count]!="":
         
         #defines question_num (the question we are on) as the last question that was used
         question_num=used_questions[quest_count]
@@ -164,12 +166,12 @@ def what_question():
             question_num=random.randint(0,19)
 
         #Adds the question number onto the used_questions list so it cannot be used again
-        used_questions.append(question_num)
+        used_questions[quest_count]=question_num
 
 #the question_screen function that prints the question screen
 def question_screen():
     #globalises the rad_grp_var variable
-    global rad_grp_var, quest_count
+    global rad_grp_var, quest_count, question_num
     global frame_question
 
     #creates the frame frame_question for the question screen
@@ -225,7 +227,7 @@ def question_screen():
 
 #the action_next function to move onto the next question
 def action_next():
-    global returnn, quest_count
+    global quest_count
 
     #finds the answer from the last question
     answer=rad_grp_var.get()
@@ -241,12 +243,11 @@ def action_next():
 
         #It logs in the answers list variable corresponding to that question that the answer was incorrect
         answers[quest_count]="incorrect"
+    else:
+        answers[quest_count]="Not attempted"
 
     #adds one to the quest_count variable to move onto the next question
     quest_count=quest_count+1
-
-    #the returnn variable tells the program that it is not returning to a past question
-    returnn=0
 
     #calls the main_loop function
     main_loop()
@@ -254,14 +255,11 @@ def action_next():
 #the action_previous function to return to the last question
 def action_previous():
 
-    #globalises the returnn variable
-    global returnn, quest_count
+    #globalises the variables
+    global quest_count
 
     #takes away one from the quest_count variable to return to the last question
     quest_count=quest_count-1
-    
-    #the returnn variable tells the program that it is returning to a past question
-    returnn=1
 
     #calls the main_loop function
     main_loop()
