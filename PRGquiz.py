@@ -58,6 +58,7 @@ quiz_len=10
 used_questions=[""]*(quiz_len*2)
 retry="no"
 quest_count=0
+previouspressed="no"
 
 #creates GUI
 root = tk.Tk()
@@ -125,9 +126,9 @@ def main_loop():
         #calls the what_question function
         what_question()
 
-        if retry=="no" and quest_count==0:
+        if retry=="no" and quest_count==0 and previouspressed=="no":
             frame_intro.pack_forget()
-        elif retry=="yes" and quest_count==0:
+        elif retry=="yes" and quest_count==0 and previouspressed=="no":
             frame_end.pack_forget()
         else:
             frame_question.pack_forget()
@@ -243,11 +244,15 @@ def action_next():
 
         #It logs in the answers list variable corresponding to that question that the answer was incorrect
         answers[quest_count]="incorrect"
-    else:
+    
+    #if no answer has been entered the question is counted as not attempted
+    elif answers[quest_count]=="":
         answers[quest_count]="Not attempted"
 
     #adds one to the quest_count variable to move onto the next question
     quest_count=quest_count+1
+
+    previouspressed="no"
 
     #calls the main_loop function
     main_loop()
@@ -256,10 +261,12 @@ def action_next():
 def action_previous():
 
     #globalises the variables
-    global quest_count
+    global quest_count, previouspressed
 
     #takes away one from the quest_count variable to return to the last question
     quest_count=quest_count-1
+
+    previouspressed="yes"
 
     #calls the main_loop function
     main_loop()
