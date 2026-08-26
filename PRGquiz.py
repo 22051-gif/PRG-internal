@@ -59,6 +59,8 @@ used_questions=[""]*(quiz_len*2)
 retry="no"
 quest_count=0
 previouspressed="no"
+keepanswer="no"
+answer=""
 
 #creates GUI
 root = tk.Tk()
@@ -107,10 +109,11 @@ def action_start():
 
     #globalises the variables
     global quest_count
-    global answers
+    global answers, answer
 
     #initialises variables
     answers=[""] * quiz_len
+    answer=[""] * quiz_len
     quest_count=0
 
     #calls the main_loop function
@@ -147,7 +150,7 @@ def main_loop():
 def what_question():
 
     #globalises the question_num variable
-    global question_num, quest_count
+    global question_num, quest_count, keepanswer
 
     #If the user has chosen to return to a past question they are sent to the last question they answered
     #or if they are returning back to the next question after clicking previous then they are taken back to the same question
@@ -155,6 +158,9 @@ def what_question():
         
         #defines question_num (the question we are on) as the last question that was used
         question_num=used_questions[quest_count]
+
+        if answers[quest_count]!="Not attempted":
+            keepanswer="yes"
     
     #if the user has chosen to move on to the next question
     else:
@@ -169,10 +175,12 @@ def what_question():
         #Adds the question number onto the used_questions list so it cannot be used again
         used_questions[quest_count]=question_num
 
+        keepanswer="no"
+
 #the question_screen function that prints the question screen
 def question_screen():
     #globalises the rad_grp_var variable
-    global rad_grp_var, quest_count, question_num
+    global rad_grp_var, quest_count, question_num, answer
     global frame_question
 
     #creates the frame frame_question for the question screen
@@ -202,11 +210,15 @@ def question_screen():
     button_next=tk.Button(frame_question, text="Next", width=12, font="arial 15", command=action_next)
     button_next.place(x=430, y=400)
 
+    if keepanswer=="yes":
+        rad_grp_var = tk.StringVar(value=answer[quest_count])
+    else:
+        rad_grp_var = tk.StringVar()
+
     #if the question is true or false
     if questions[1][question_num]=="true/false":
         
         #prints the true and false radiobuttons
-        rad_grp_var = tk.StringVar()
         radiobutton_true = tk.Radiobutton(frame_question, text="True", font="arial 13", bg="light steel blue", variable=rad_grp_var, value="True")
         radiobutton_false = tk.Radiobutton(frame_question, text="False", font="arial 13", bg="light steel blue", variable=rad_grp_var, value="False")
         radiobutton_true.place(x=30, y=100)
@@ -216,7 +228,6 @@ def question_screen():
     elif questions[1][question_num]!="true/false":
 
         #prints a, b, c, d radiobuttons
-        rad_grp_var = tk.StringVar()
         radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="a")
         radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="b")
         radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="c")
@@ -228,25 +239,63 @@ def question_screen():
 
 #the action_next function to move onto the next question
 def action_next():
-    global quest_count
+    global quest_count, previouspressed, answer
 
     #finds the answer from the last question
-    answer=rad_grp_var.get()
+    answer[quest_count]=rad_grp_var.get()
 
     #if the answer is correct
-    if answer==questions[2][question_num]:
+    if answer[quest_count]==questions[2][question_num]:
 
         #It logs in the answers list variable corresponding to that question that the answer was correct
         answers[quest_count]="correct"
 
+        if answer[quest_count]=="a":
+            radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="arial 13", bg="light green", variable=rad_grp_var, value="a")
+            radiobutton_a.place(x=30, y=100)
+        elif answer[quest_count]=="b":
+            radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="arial 13", bg="light green", variable=rad_grp_var, value="b")
+            radiobutton_b.place(x=30, y=170)
+        elif answer[quest_count]=="c":
+            radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="arial 13", bg="light green", variable=rad_grp_var, value="c")
+            radiobutton_c.place(x=30, y=240)
+        elif answer[quest_count]=="d":
+            radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="arial 13", bg="light green", variable=rad_grp_var, value="d")     
+            radiobutton_d.place(x=30, y=310)
+        elif answer[quest_count]=="True":
+            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="arial 13", bg="light green", variable=rad_grp_var, value="True")
+            radiobutton_true.place(x=30, y=100)
+        elif answer[quest_count]=="False":
+            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="arial 13", bg="light green", variable=rad_grp_var, value="False")
+            radiobutton_false.place(x=30, y=150)
+
     #if the answer is incorrect
-    elif (answer!=questions[2][question_num]) and (answer!=""):
+    elif (answer[quest_count]!=questions[2][question_num]) and (answer[quest_count]!=""):
 
         #It logs in the answers list variable corresponding to that question that the answer was incorrect
         answers[quest_count]="incorrect"
+
+        if answer[quest_count]=="a":
+            radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="arial 13", bg="Salmon", variable=rad_grp_var, value="a")
+            radiobutton_a.place(x=30, y=100)
+        elif answer[quest_count]=="b":
+            radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="arial 13", bg="Salmon", variable=rad_grp_var, value="b")
+            radiobutton_b.place(x=30, y=170)
+        elif answer[quest_count]=="c":
+            radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="arial 13", bg="Salmon", variable=rad_grp_var, value="c")
+            radiobutton_c.place(x=30, y=240)
+        elif answer[quest_count]=="d":
+            radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="arial 13", bg="Salmon", variable=rad_grp_var, value="d")     
+            radiobutton_d.place(x=30, y=310)
+        elif answer[quest_count]=="True":
+            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="arial 13", bg="Salmon", variable=rad_grp_var, value="True")
+            radiobutton_true.place(x=30, y=100)
+        elif answer[quest_count]=="False":
+            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="arial 13", bg="Salmon", variable=rad_grp_var, value="False")
+            radiobutton_false.place(x=30, y=150)
     
     #if no answer has been entered the question is counted as not attempted
-    elif answers[quest_count]=="":
+    elif answer[quest_count]=="":
         answers[quest_count]="Not attempted"
 
     #adds one to the quest_count variable to move onto the next question
@@ -254,14 +303,17 @@ def action_next():
 
     previouspressed="no"
 
-    #calls the main_loop function
-    main_loop()
+    #prints the next button
+    button_next=tk.Button(frame_question, text="Next", width=12, font="arial 15", command=main_loop)
+    button_next.place(x=430, y=400)
 
 #the action_previous function to return to the last question
 def action_previous():
 
     #globalises the variables
     global quest_count, previouspressed
+
+    answer[quest_count]=rad_grp_var.get()
 
     #takes away one from the quest_count variable to return to the last question
     quest_count=quest_count-1
@@ -288,7 +340,7 @@ def calc_score():
     if correct+incorrect==0:
         score=0
     else:
-            
+        
         #calculates the score percentage
         score=(correct/(correct+incorrect))*100
 
