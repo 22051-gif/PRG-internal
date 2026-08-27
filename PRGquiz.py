@@ -58,6 +58,7 @@ quiz_len=10
 used_questions=[""]*(quiz_len*2)
 retry="no"
 quest_count=0
+full_count=0
 previouspressed="no"
 keepanswer="no"
 answer=""
@@ -82,26 +83,29 @@ def intro_screen():
     frame_intro.place(x=0, y=0)
 
     #creates the labels for introducing the user to the program
-    label_intro=tk.Label(frame_intro, width=36, height=2, text="Welcome to the 9DVC quiz!", font="arial 20")
-    label_intro.place(x=10, y=10)
+    label_intro=tk.Label(frame_intro, width=38, height=3, text="Welcome to the 9DVC quiz!", font="courier 20 bold")
+    label_intro.place(x=0, y=0)
 
-    label_explain=tk.Label(frame_intro, text="You will be given 10 9DVC related", font="arial 15", bg="light steel blue")
-    label_explain.place(x=140, y=120)
+    label_explain=tk.Label(frame_intro, text="You will be given 10 9DVC related", font="courier 12", bg="light steel blue")
+    label_explain.place(x=120, y=120)
 
-    label_explain2=tk.Label(frame_intro, text="multi-choice and true/false questions", font="arial 15", bg="light steel blue")
-    label_explain2.place(x=135, y=150)
+    label_explain2=tk.Label(frame_intro, text="multi-choice and true/false questions", font="courier 12", bg="light steel blue")
+    label_explain2.place(x=110, y=150)
 
-    label_explain3=tk.Label(frame_intro, text="You may choose not to attempt a question by skipping it", font="arial 15", bg="light steel blue")
-    label_explain3.place(x=60, y=180)
+    label_explain3=tk.Label(frame_intro, text="You may choose not to attempt a question", font="courier 12", bg="light steel blue")
+    label_explain3.place(x=90, y=180)
 
-    label_explain4=tk.Label(frame_intro, text="(this will not be included into your score)", font="arial 15", bg="light steel blue")
-    label_explain4.place(x=120, y=210)
+    label_explain4=tk.Label(frame_intro, text="by not answering it", font="courier 12", bg="light steel blue")
+    label_explain4.place(x=190, y=210)
 
-    label_explain3=tk.Label(frame_intro, text="Have fun!", font="arial 17", bg="light steel blue")
-    label_explain3.place(x=250, y=280)
+    label_explain5=tk.Label(frame_intro, text="(this will not be included into your score)", font="courier 12", bg="light steel blue")
+    label_explain5.place(x=80, y=240)
+
+    label_explain6=tk.Label(frame_intro, text="Have fun!", font="courier 13", bg="light steel blue")
+    label_explain6.place(x=240, y=280)
 
     #creates the button for starting the program that sends you to the action_start function
-    button_start=tk.Button(frame_intro, text="Start", font="arial 15", width=12, command=action_start)
+    button_start=tk.Button(frame_intro, text="Start", font="courier 15", width=12, command=action_start)
     button_start.place(x=430, y=400)
 
 #action_start function that is called with the start button
@@ -150,11 +154,11 @@ def main_loop():
 def what_question():
 
     #globalises the question_num variable
-    global question_num, quest_count, keepanswer
+    global question_num, quest_count, keepanswer, full_count
 
     #If the user has chosen to return to a past question they are sent to the last question they answered
     #or if they are returning back to the next question after clicking previous then they are taken back to the same question
-    if used_questions[quest_count]!="":
+    if used_questions[full_count]!="":
         
         #defines question_num (the question we are on) as the last question that was used
         question_num=used_questions[quest_count]
@@ -192,22 +196,22 @@ def question_screen():
     quest_count2=str(quest_count+1)
 
     #label_questnum to display the question number
-    label_questnum=tk.Label(frame_question, font="arial 13", text=("Question", quest_count2), bg="light steel blue")
+    label_questnum=tk.Label(frame_question, font="courier 12", text=("Question", quest_count2), bg="light steel blue")
     label_questnum.place(x=10, y=10)
 
     #label_question to display the question
-    label_question=tk.Label(frame_question, text=questions[0][question_num], font="arial 12")
-    label_question.place(x=10, y=50)
+    label_question=tk.Label(frame_question, text=questions[0][question_num], font="courier 9 bold")
+    label_question.place(x=5, y=50)
 
     #if the question is not question 1
     if quest_count!=0:
 
         #prints the previous button
-        button_previous=tk.Button(frame_question, text="Previous", width=12, font="arial 15", command=action_previous)
+        button_previous=tk.Button(frame_question, text="Previous", width=12, font="courier 12", command=action_previous)
         button_previous.place(x=30, y=400)
 
     #prints the next button
-    button_next=tk.Button(frame_question, text="Next", width=12, font="arial 15", command=action_next)
+    button_next=tk.Button(frame_question, text="Next", width=12, font="courier 12", command=action_next)
     button_next.place(x=430, y=400)
 
     if keepanswer=="yes":
@@ -219,27 +223,27 @@ def question_screen():
     if questions[1][question_num]=="true/false":
         
         #prints the true and false radiobuttons
-        radiobutton_true = tk.Radiobutton(frame_question, text="True", font="arial 13", bg="light steel blue", variable=rad_grp_var, value="True")
-        radiobutton_false = tk.Radiobutton(frame_question, text="False", font="arial 13", bg="light steel blue", variable=rad_grp_var, value="False")
-        radiobutton_true.place(x=30, y=100)
-        radiobutton_false.place(x=30, y=150)
+        radiobutton_true = tk.Radiobutton(frame_question, text="True", font="courier 10", bg="light steel blue", variable=rad_grp_var, value="True")
+        radiobutton_false = tk.Radiobutton(frame_question, text="False", font="courier 10", bg="light steel blue", variable=rad_grp_var, value="False")
+        radiobutton_true.place(x=20, y=100)
+        radiobutton_false.place(x=20, y=150)
     
     #if the question is multi-choice
     elif questions[1][question_num]!="true/false":
 
         #prints a, b, c, d radiobuttons
-        radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="a")
-        radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="b")
-        radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="c")
-        radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="arial 13", bg="light steel blue", variable=rad_grp_var, value="d")
-        radiobutton_a.place(x=30, y=100)
-        radiobutton_b.place(x=30, y=170)
-        radiobutton_c.place(x=30, y=240)
-        radiobutton_d.place(x=30, y=310)
+        radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="courier 10", bg="light steel blue", variable=rad_grp_var, value="a")
+        radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="courier 10", bg="light steel blue", variable=rad_grp_var, value="b")
+        radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="courier 10", bg="light steel blue", variable=rad_grp_var, value="c")
+        radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="courier 10", bg="light steel blue", variable=rad_grp_var, value="d")
+        radiobutton_a.place(x=20, y=100)
+        radiobutton_b.place(x=20, y=170)
+        radiobutton_c.place(x=20, y=240)
+        radiobutton_d.place(x=20, y=310)
 
 #the action_next function to move onto the next question
 def action_next():
-    global quest_count, previouspressed, answer
+    global quest_count, previouspressed, answer, full_count
 
     #finds the answer from the last question
     answer[quest_count]=rad_grp_var.get()
@@ -251,23 +255,23 @@ def action_next():
         answers[quest_count]="correct"
 
         if answer[quest_count]=="a":
-            radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="arial 13", bg="light green", variable=rad_grp_var, value="a")
-            radiobutton_a.place(x=30, y=100)
+            radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="courier 10", bg="light green", variable=rad_grp_var, value="a")
+            radiobutton_a.place(x=20, y=100)
         elif answer[quest_count]=="b":
-            radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="arial 13", bg="light green", variable=rad_grp_var, value="b")
-            radiobutton_b.place(x=30, y=170)
+            radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="courier 10", bg="light green", variable=rad_grp_var, value="b")
+            radiobutton_b.place(x=20, y=170)
         elif answer[quest_count]=="c":
-            radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="arial 13", bg="light green", variable=rad_grp_var, value="c")
-            radiobutton_c.place(x=30, y=240)
+            radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="courier 10", bg="light green", variable=rad_grp_var, value="c")
+            radiobutton_c.place(x=20, y=240)
         elif answer[quest_count]=="d":
-            radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="arial 13", bg="light green", variable=rad_grp_var, value="d")     
-            radiobutton_d.place(x=30, y=310)
+            radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="courier 10", bg="light green", variable=rad_grp_var, value="d")     
+            radiobutton_d.place(x=20, y=310)
         elif answer[quest_count]=="True":
-            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="arial 13", bg="light green", variable=rad_grp_var, value="True")
-            radiobutton_true.place(x=30, y=100)
+            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="courier 10", bg="light green", variable=rad_grp_var, value="True")
+            radiobutton_true.place(x=20, y=100)
         elif answer[quest_count]=="False":
-            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="arial 13", bg="light green", variable=rad_grp_var, value="False")
-            radiobutton_false.place(x=30, y=150)
+            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="courier 10", bg="light green", variable=rad_grp_var, value="False")
+            radiobutton_false.place(x=20, y=150)
 
     #if the answer is incorrect
     elif (answer[quest_count]!=questions[2][question_num]) and (answer[quest_count]!=""):
@@ -276,23 +280,23 @@ def action_next():
         answers[quest_count]="incorrect"
 
         if answer[quest_count]=="a":
-            radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="arial 13", bg="Salmon", variable=rad_grp_var, value="a")
-            radiobutton_a.place(x=30, y=100)
+            radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="courier 10", bg="Salmon", variable=rad_grp_var, value="a")
+            radiobutton_a.place(x=20, y=100)
         elif answer[quest_count]=="b":
-            radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="arial 13", bg="Salmon", variable=rad_grp_var, value="b")
-            radiobutton_b.place(x=30, y=170)
+            radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="courier 10", bg="Salmon", variable=rad_grp_var, value="b")
+            radiobutton_b.place(x=20, y=170)
         elif answer[quest_count]=="c":
-            radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="arial 13", bg="Salmon", variable=rad_grp_var, value="c")
-            radiobutton_c.place(x=30, y=240)
+            radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="courier 10", bg="Salmon", variable=rad_grp_var, value="c")
+            radiobutton_c.place(x=20, y=240)
         elif answer[quest_count]=="d":
-            radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="arial 13", bg="Salmon", variable=rad_grp_var, value="d")     
-            radiobutton_d.place(x=30, y=310)
+            radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="courier 10", bg="Salmon", variable=rad_grp_var, value="d")     
+            radiobutton_d.place(x=20, y=310)
         elif answer[quest_count]=="True":
-            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="arial 13", bg="Salmon", variable=rad_grp_var, value="True")
-            radiobutton_true.place(x=30, y=100)
+            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="courier 11", bg="Salmon", variable=rad_grp_var, value="True")
+            radiobutton_true.place(x=20, y=100)
         elif answer[quest_count]=="False":
-            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="arial 13", bg="Salmon", variable=rad_grp_var, value="False")
-            radiobutton_false.place(x=30, y=150)
+            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="courier 11", bg="Salmon", variable=rad_grp_var, value="False")
+            radiobutton_false.place(x=20, y=150)
     
     #if no answer has been entered the question is counted as not attempted
     elif answer[quest_count]=="":
@@ -301,22 +305,26 @@ def action_next():
     #adds one to the quest_count variable to move onto the next question
     quest_count=quest_count+1
 
+    full_count=full_count+1
+
     previouspressed="no"
 
     #prints the next button
-    button_next=tk.Button(frame_question, text="Next", width=12, font="arial 15", command=main_loop)
+    button_next=tk.Button(frame_question, text="Next", width=12, font="courier 12", command=main_loop)
     button_next.place(x=430, y=400)
 
 #the action_previous function to return to the last question
 def action_previous():
 
     #globalises the variables
-    global quest_count, previouspressed
+    global quest_count, previouspressed, full_count
 
     answer[quest_count]=rad_grp_var.get()
 
     #takes away one from the quest_count variable to return to the last question
     quest_count=quest_count-1
+
+    full_count=full_count-1
 
     previouspressed="yes"
 
@@ -382,56 +390,56 @@ def end_screen():
     #the message telling them how many questions they got right
     message=f"You answered {correct} out of {correct+incorrect} questions correctly"
 
-    label_score=tk.Label(frame_end, bg="light steel blue", text=message, font="arial 15")
-    label_score.place(x=80, y=120)
+    label_score=tk.Label(frame_end, bg="light steel blue", text=message, font="courier 12")
+    label_score.place(x=95, y=120)
 
     #if the user achieved excellence
     if grade=="excellence":
 
         #prints a congratulations message
-        label_congrats=tk.Label(frame_end, text="Congratulations!", width=36, height=2, font="arial 20")
-        label_congrats.place(x=10, y=10)
+        label_congrats=tk.Label(frame_end, text="Congratulations!", width=38, height=3, font="courier 20 bold")
+        label_congrats.place(x=0, y=0)
 
         #tells them their score
-        label_grade=tk.Label(frame_end, bg="light steel blue", text="You have achieved excellence!", font="arial 17")
-        label_grade.place(x=150, y=230)
+        label_grade=tk.Label(frame_end, bg="light steel blue", text="You have achieved excellence!", font="courier 17")
+        label_grade.place(x=120, y=230)
     else:
 
         #prints a motivational message
-        label_congrats=tk.Label(frame_end, text="Good try!", width=36, height=2, font="arial 20")
-        label_congrats.place(x=10, y=10)
+        label_congrats=tk.Label(frame_end, text="Good try!", width=38, height=3, font="courier 20 bold")
+        label_congrats.place(x=0, y=0)
 
         #if the user got a not achieved
         if grade=="not achieved":
             #tells them their score
-            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is a not achieved", font="arial 17")
-            label_grade.place(x=190, y=230)
+            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is a not achieved", font="courier 17")
+            label_grade.place(x=170, y=230)
 
         #if the user got an achieved
         elif grade=="achieved":
             #tells them their score
-            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is an achieved", font="arial 17")
-            label_grade.place(x=200, y=230)
+            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is an achieved", font="courier 17")
+            label_grade.place(x=190, y=230)
 
         #if the user got a merit
         elif grade=="merit":
             #tells them their score
-            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is a merit", font="arial 17")
+            label_grade=tk.Label(frame_end, bg="light steel blue", text="This is a merit", font="courier 17")
             label_grade.place(x=210, y=230)
-        
-        #prints a motivational message
-        label_retry=tk.Label(frame_end, bg="light steel blue", text="Retry?", font="arial 15")
-        label_retry.place(x=260, y=260)
 
     #if this is not their second attempt
     if retry!="yes":
 
         #prints the retry button
-        button_retry=tk.Button(frame_end, text="Retry", width=12, font="arial 15", command=action_retry)
+        button_retry=tk.Button(frame_end, text="Retry", width=12, font="courier 15", command=action_retry)
         button_retry.place(x=30, y=400)
 
+        #prints a motivational message
+        label_retry=tk.Label(frame_end, bg="light steel blue", text="Retry?", font="courier 15")
+        label_retry.place(x=260, y=260)
+
     #prints the end button
-    button_end=tk.Button(frame_end, text="End", width=12, font="arial 15", command=action_end)
+    button_end=tk.Button(frame_end, text="End", width=12, font="courier 15", command=action_end)
     button_end.place(x=430, y=400)
 
 #the action_retry function that lets the user retry the quiz with different questions
