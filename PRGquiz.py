@@ -133,10 +133,15 @@ def main_loop():
         #calls the what_question function
         what_question()
 
+        #if the user has just come from the intro screen it hides it
         if retry=="no" and quest_count==0 and previouspressed=="no":
             frame_intro.pack_forget()
+        
+        #if the user has just restarted the quiz it hides the end screen
         elif retry=="yes" and quest_count==0 and previouspressed=="no":
             frame_end.pack_forget()
+        
+        #otherwise it hides the past question screen
         else:
             frame_question.pack_forget()
 
@@ -214,6 +219,7 @@ def question_screen():
     button_next=tk.Button(frame_question, text="Next", width=12, font="courier 12", command=action_next)
     button_next.place(x=430, y=400)
 
+    #if the user has already answered this question it automatically stays with that answer
     if keepanswer=="yes":
         rad_grp_var = tk.StringVar(value=answer[quest_count])
     else:
@@ -292,26 +298,53 @@ def action_next():
             radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="courier 10", bg="Salmon", variable=rad_grp_var, value="d")     
             radiobutton_d.place(x=20, y=310)
         elif answer[quest_count]=="True":
-            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="courier 11", bg="Salmon", variable=rad_grp_var, value="True")
+            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="courier 10", bg="Salmon", variable=rad_grp_var, value="True")
             radiobutton_true.place(x=20, y=100)
         elif answer[quest_count]=="False":
-            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="courier 11", bg="Salmon", variable=rad_grp_var, value="False")
+            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="courier 10", bg="Salmon", variable=rad_grp_var, value="False")
             radiobutton_false.place(x=20, y=150)
     
-    #if no answer has been entered the question is counted as not attempted
+        #Tells the user what the correct answer is
+        if questions[2][question_num]=="a":
+            radiobutton_a = tk.Radiobutton(frame_question, text=options[question_num][0], font="courier 10", bg="light green", variable=rad_grp_var, value="a")
+            radiobutton_a.place(x=20, y=100)
+        elif questions[2][question_num]=="b":
+            radiobutton_b = tk.Radiobutton(frame_question, text=options[question_num][1], font="courier 10", bg="light green", variable=rad_grp_var, value="b")
+            radiobutton_b.place(x=20, y=170)
+        elif questions[2][question_num]=="c":
+            radiobutton_c = tk.Radiobutton(frame_question, text=options[question_num][2], font="courier 10", bg="light green", variable=rad_grp_var, value="c")
+            radiobutton_c.place(x=20, y=240)
+        elif questions[2][question_num]=="d":
+            radiobutton_d = tk.Radiobutton(frame_question, text=options[question_num][3], font="courier 10", bg="light green", variable=rad_grp_var, value="d")     
+            radiobutton_d.place(x=20, y=310)
+        elif questions[2][question_num]=="True":
+            radiobutton_true = tk.Radiobutton(frame_question, text="True", font="courier 10", bg="light green", variable=rad_grp_var, value="True")
+            radiobutton_true.place(x=20, y=100)
+        elif questions[2][question_num]=="False":
+            radiobutton_false = tk.Radiobutton(frame_question, text="False", font="courier 10", bg="light green", variable=rad_grp_var, value="False")
+
+    #if no answer has been entered the question is counted as not attempted hi!!!!!!
     elif answer[quest_count]=="":
         answers[quest_count]="Not attempted"
 
     #adds one to the quest_count variable to move onto the next question
     quest_count=quest_count+1
 
+    #adds one to the full_count variable to move onto the next question
     full_count=full_count+1
 
+    #tells the program it is not returning to a previous question
     previouspressed="no"
 
-    #prints the next button
-    button_next=tk.Button(frame_question, text="Next", width=12, font="courier 12", command=main_loop)
-    button_next.place(x=430, y=400)
+    #if the user hasn't answered the question they are taken straight to the next question
+    if answers[quest_count-1]=="Not attempted":
+        main_loop()
+
+    #if the user has answered the question they are given a button to press to move on
+    else:
+        #prints the next button
+        button_next=tk.Button(frame_question, text="Next", width=12, font="courier 12", command=main_loop)
+        button_next.place(x=430, y=400)
 
 #the action_previous function to return to the last question
 def action_previous():
@@ -324,8 +357,10 @@ def action_previous():
     #takes away one from the quest_count variable to return to the last question
     quest_count=quest_count-1
 
+    #takes away one from the full_count variable to return to the last question
     full_count=full_count-1
 
+    #tells the program it is returning to a previous question
     previouspressed="yes"
 
     #calls the main_loop function
@@ -345,8 +380,11 @@ def calc_score():
     #incorrect=how many times "incorrect" appears in answers
     incorrect=answers.count("incorrect")
 
+    #if the user has not answered any questions then their score is automatically 0
     if correct+incorrect==0:
         score=0
+    
+    #if the user has answered questions then their score is calculated
     else:
         
         #calculates the score percentage
